@@ -9,7 +9,7 @@
 # Previews
 | Main | Dawn | Moon |
 | --- | --- | --- |
-| <img src="./assets/main-cropped.png" width="240" alt="Rose Pine Main theme" /> | <img src="./assets/dawn-cropped.png" width="240" alt="Rose Pine Dawn theme" /> | <img src="./assets/moon-cropped.png" width="240" alt="Rose Pine Moon theme" /> |
+| <img src="./assets/main.png" width="240" alt="Rose Pine Main theme" /> | <img src="./assets/dawn.png" width="240" alt="Rose Pine Dawn theme" /> | <img src="./assets/moon.png" width="240" alt="Rose Pine Moon theme" /> |
 
 # Install
 - copy the cloned in `.rmp/plugins` folder
