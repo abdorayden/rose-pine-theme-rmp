@@ -107,7 +107,7 @@ return function()
         if cfg then
             local conf = cfg:get("rose-pine-theme-rmp")
             if conf and conf.VARIANT then
-                -- maybe add more fields to configurations like choose specific window id to apply something
+                -- Maybe add more fields to configurations like choose specific window id to apply something
                 -- main | moon | dawn
                 VARIANT = conf.VARIANT
             end
