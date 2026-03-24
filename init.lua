@@ -36,6 +36,8 @@ local api = require("rmp.rmp")
 -- Muted elements: Rose Pine Dawn Iris (#907aa9) - NoBrights.Magenta
 
 local VARIANT = "main"
+local THEME_NAME = "rose-pine"
+local doApply = true
 
 local rose_pine = {
     main = {
@@ -87,7 +89,6 @@ local function apply(tha_template)
                 component.title.foregroundColor = api.colorFromHex(rose_pine[VARIANT].TitleText, api.FG)
                 component.title.backgroundColor = api.colorFromHex(rose_pine[VARIANT].TitleBackGround, api.BG)
             else
-                ---- unreachable
                 component.table = nil
             end
         end
@@ -99,43 +100,40 @@ local function apply(tha_template)
     end
 end
 
+local vt = api.VirtualTerminal.new(1, 1)
 return function()
-    local vt = api.VirtualTerminal.new(1, 1) -- sins i don't have to render shit
-
-    -- getting the configurations
     vt:onConfiguration(function(cfg)
         if cfg then
             local conf = cfg:get("rose-pine-theme-rmp")
             if conf and conf.VARIANT then
-                -- Maybe add more fields to configurations like choose specific window id to apply something
                 -- main | moon | dawn
                 VARIANT = conf.VARIANT
+                THEME_NAME = conf.name_as or "rose-pine"
+            end
+            local settings = cfg:get("settings")
+            if settings and settings.theme and settings.theme == THEME_NAME then
+                doApply = true
+            else
+                doApply = false
             end
         end
     end)
 
-    -- local apply = nil
-    -- vt:addEventListener(api.EventType.TransformDataGet, function(data)
-    --     if data and data.themeUtil and data.themeUtil.applyTheme and type(data.themeUtil.applyTheme) == "function" then
-    --         apply = data.themeUtil.applyTheme
-    --     end
-    -- end)
-    --
     -- apply the theme on the template
     vt:onTemplate(function(template)
         if template then
             if apply then
-                apply(template)
+                if doApply then
+                    apply(template)
+                end
             end
         end
     end)
 
-    -- share the current theme
-    -- all plugins can get the theme and use it as their theme
-    vt:addEventListener(api.EventType.TransformDataPut, function()
-        return {
-            theme = rose_pine[VARIANT]
-        }
+    vt:addEventListener(api.EventType.TransformDataGet, function(data)
+        if data and data.ThemeManagerObj then
+            data.ThemeManagerObj:addMyTheme(THEME_NAME, rose_pine[VARIANT])
+        end
     end)
 
     return vt

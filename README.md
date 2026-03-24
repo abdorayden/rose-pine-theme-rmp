@@ -18,10 +18,12 @@
 ```lua
 {
     "rose-pine-rmp",
-    -- config
+    -- default config
     {
-        VARIANT = "main" --"main" "dawn" "moon" 
+        VARIANT = "main", --"main" "dawn" "moon" 
+        name_as = "rose-pine"
     }
 }
 ```
-- disable theme from settings config
+
+- sins the plugin is activated u can choose the theme in **theme** field in settings configurations
