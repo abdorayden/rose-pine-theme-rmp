@@ -16,14 +16,19 @@
 
 # Configurations
 ```lua
-{
-    "rose-pine-rmp",
-    -- default config
-    {
-        VARIANT = "main", --"main" "dawn" "moon" 
-        name_as = "rose-pine"
-    }
+
+local settings = raymp.engine.settings
+settings.theme = "rose-pine"
+
+-- NOTE: rose-pine plugin configuration
+raymp:plug {
+    priority = 0,
+    name = "rose-pine-theme-rmp"
 }
+raymp.rose_pine_plugin = {}
+raymp.rose_pine_plugin.variant = "main"
+raymp.rose_pine_plugin.name_as = "rose-pine"
+--------
 ```
 
 - sins the plugin is activated u can choose the theme in **theme** field in settings configurations

@@ -39,6 +39,18 @@ local VARIANT = "main"
 local THEME_NAME = "rose-pine"
 local doApply = true
 
+if raymp.rose_pine_plugin == nil then
+    raymp.rose_pine_plugin = {}
+end
+
+if not raymp.rose_pine_plugin.variant then
+    raymp.rose_pine_plugin.varian = "main"
+end
+
+if not raymp.rose_pine_plugin.name_as then
+    raymp.rose_pine_plugin.name_as = "rose-pine"
+end
+
 local rose_pine = {
     main = {
         BackGround = "#191724",
@@ -75,66 +87,28 @@ local rose_pine = {
     }
 }
 
-local function apply(tha_template)
-    for _, component in ipairs(tha_template) do
-        if component.title then
-            if type(component.title) == "string" then
-                local val = component.title
-                component.title = {
-                    value = val,
-                    foregroundColor = api.colorFromHex(rose_pine[VARIANT].TitleText, api.FG),
-                    backgroundColor = api.colorFromHex(rose_pine[VARIANT].TitleBackGround, api.BG),
-                }
-            elseif type(component.title) == "table" then
-                component.title.foregroundColor = api.colorFromHex(rose_pine[VARIANT].TitleText, api.FG)
-                component.title.backgroundColor = api.colorFromHex(rose_pine[VARIANT].TitleBackGround, api.BG)
-            else
-                component.table = nil
-            end
-        end
-        component.foregroundColor = api.colorFromHex(rose_pine[VARIANT].BorderColor, api.FG)
-        component.backgroundColor = api.colorFromHex(rose_pine[VARIANT].BackGround, api.BG)
-        if component.children then
-            apply(component.children)
-        end
-    end
-end
+local settings = raymp.engine.settings
 
-local vt = api.VirtualTerminal.new(1, 1)
 return function()
-    vt:onConfiguration(function(cfg)
-        if cfg then
-            local conf = cfg:get("rose-pine-theme-rmp")
-            if conf and conf.VARIANT then
-                -- main | moon | dawn
-                VARIANT = conf.VARIANT
-                THEME_NAME = conf.name_as or "rose-pine"
-            end
-            local settings = cfg:get("settings")
-            if settings and settings.theme and settings.theme == THEME_NAME then
-                doApply = true
-            else
-                doApply = false
-            end
+    VARIANT = raymp.rose_pine_plugin.variant
+    THEME_NAME = raymp.rose_pine_plugin.name_as
+
+    if settings and settings.theme and settings.theme == THEME_NAME then
+        doApply = true
+    else
+        doApply = false
+    end
+
+
+    raymp:onTemplate(function(template)
+        if template and doApply then
+            raymp:applyTheme(template, rose_pine, VARIANT)
         end
     end)
 
-    -- apply the theme on the template
-    vt:onTemplate(function(template)
-        if template then
-            if apply then
-                if doApply then
-                    apply(template)
-                end
-            end
-        end
-    end)
-
-    vt:addEventListener(api.EventType.TransformDataGet, function(data)
+    raymp:addEventListener(api.EventType.TransformDataGet, function(data)
         if data and data.ThemeManagerObj then
             data.ThemeManagerObj:addMyTheme(THEME_NAME, rose_pine[VARIANT])
         end
     end)
-
-    return vt
 end
